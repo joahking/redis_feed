@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Joaquin Rivera Padron"]
   s.email       = ["joahking@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{A minimal feed using redis}
+  s.description = %q{A minimal feed using redis}
 
   s.rubyforge_project = "redis_feed"
 
@@ -20,5 +20,6 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
-  # s.add_runtime_dependency "rest-client"
+  s.add_runtime_dependency "redis"
+  s.add_runtime_dependency "SystemTimer"
 end
