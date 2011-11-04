@@ -19,16 +19,16 @@ module RedisFeed
       end
 
       def subscribe(reader)
-        $redis.sadd outboxes, reader
+        DB.sadd outboxes, reader
       end
 
       def readers
-        $redis.smembers outboxes
+        DB.smembers outboxes
       end
 
       def push_event_to_readers
         readers.each do |reader|
-          $redis.lpush reader, event
+          DB.lpush reader, event
         end
       end
 

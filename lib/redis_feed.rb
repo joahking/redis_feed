@@ -1,3 +1,5 @@
 require "redis_feed/version"
+require "redis_feed/config"
+require "redis_feed/db"
 require "redis_feed/reader"
 require "redis_feed/source"
