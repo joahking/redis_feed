@@ -1,0 +1,20 @@
+PATH
+  remote: .
+  specs:
+    redis_feed (0.0.1)
+      SystemTimer
+      redis
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    SystemTimer (1.2.3)
+    minitest (2.7.0)
+    redis (2.2.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  minitest
+  redis_feed!
