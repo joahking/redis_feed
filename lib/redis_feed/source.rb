@@ -3,19 +3,23 @@ module RedisFeed
 
     def self.included(base)
       base.class_eval do
+        #TODO subscribe an object to itself
         after_save :push_event_to_readers
       end
       base.send :include, InstanceMethods
     end
 
     module InstanceMethods
-      #you might want a shorter key
-      def feed_key
-        "#{self.class.to_s}/#{id}"
+      def rf_events
+        es = []
+        RedisFeed::Reader.read(inbox).each do |e|
+          es << JSON.parse(e)
+        end
+        es
       end
 
-      def outboxes
-        "#{feed_key}/o"
+      def rf_event!(e = _rf_event)
+        push_event_to_readers e.to_json
       end
 
       def subscribe(reader)
@@ -26,19 +30,48 @@ module RedisFeed
         DB.smembers outboxes
       end
 
-      def push_event_to_readers
+      # -----------------
+
+      #TODO make the separator "/" configurable
+      def feed_key
+        "#{_rf_name}/#{_rf_id}"
+      end
+
+      def _rf_name
+        #you might want a shorter key name
+        self.class.to_s
+      end
+
+      def _rf_id
+        self.id
+      end
+
+      # -----------------
+
+      def outboxes
+        "#{feed_key}/o"
+      end
+
+      def inbox
+        "#{feed_key}/i"
+      end
+
+      # -----------------
+
+      def push_event_to_readers(e = _rf_event)
         readers.each do |reader|
-          DB.lpush reader, event
+          DB.lpush reader, e
         end
       end
 
-      def event
+      def _rf_event
         # o means object, # e means event
         e = {:o => self.class.to_s, :id => self.id, :e => 'created'}
         # u means user
         e[:u] = @current_user.id if @current_user
         e.to_json
       end
+
     end
 
   end
