@@ -1,8 +1,8 @@
 module RedisFeed
   class Reader
-    def self.read(inbox)
+    def self.read(inbox, offset = 0, amount = 10)
       #TODO test this
-      DB.lrange inbox, 0, 10
+      DB.lrange inbox, offset, amount
     end
   end
 end
