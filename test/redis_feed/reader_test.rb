@@ -6,6 +6,7 @@ module RedisFeed
     context '#read' do
       it "must read from redis"
       it "must have defaults"
+      it "must return hashes"
     end #read
 
   end

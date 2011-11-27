@@ -1,0 +1,11 @@
+require 'test_helper'
+
+module RedisFeed
+  describe Reader do
+
+    it "must raise NoRedisError" do
+      lambda { DB.any_method }.must_raise(RedisFeed::NoRedisError)
+    end
+
+  end
+end

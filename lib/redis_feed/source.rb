@@ -11,11 +11,11 @@ module RedisFeed
 
     module InstanceMethods
       def rf_events
-        es = []
-        RedisFeed::Reader.read(inbox).each do |e|
-          es << JSON.parse(e)
-        end
-        es
+        # es = []
+        RedisFeed::Reader.read(inbox) # .each do |e|
+        #   es << JSON.parse(e)
+        # end
+        # es
       end
 
       def rf_event!(e = _rf_event)
@@ -58,17 +58,25 @@ module RedisFeed
 
       # -----------------
 
-      def push_event_to_readers(e = _rf_event)
+      def push_event_to_readers(event = _rf_event)
         readers.each do |reader|
-          DB.lpush reader, e
+          push reader, event
         end
       end
 
+      def push(reader, event = _rf_event)
+        DB.lpush reader, event
+      end
+
       def _rf_event
+        event = (self.created_at == self.updated_at) ? 'created' : 'updated'
         # o means object, # e means event
-        e = {:o => self.class.to_s, :id => self.id, :e => 'created'}
+        e = {:o => self.class.to_s, :id => self.id, :on => self.name, :e => event}
         # u means user
-        e[:u] = @current_user.id if @current_user
+        if @current_user
+          e[:u] = @current_user.id
+          e[:un] = @current_user.username
+        end
         e.to_json
       end
 
